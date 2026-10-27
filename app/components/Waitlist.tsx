@@ -2,8 +2,10 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import BirdMark from "./BirdMark";
+import { mountTurnstile, type Challenge } from "./turnstile";
 
 const KEY = "wrenyn_waitlist";
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
 const GMAIL = /^[a-z0-9._%+-]+@gmail\.com$/;
 const BIRD_HTML = '<img class="wing" src="/wrenyn-wing.png" alt=""><img class="body" src="/wrenyn-body.png" alt="">';
 
@@ -32,6 +34,8 @@ export default function Waitlist() {
   const bird = useRef<HTMLSpanElement>(null);
   const sky = useRef<HTMLDivElement>(null);
   const input = useRef<HTMLInputElement>(null);
+  const captchaBox = useRef<HTMLDivElement>(null);
+  const challenge = useRef<Challenge | null>(null);
   const busyRef = useRef(false);
   const toastTimer = useRef<ReturnType<typeof setTimeout>>(undefined);
   const [joined, setJoined] = useState<string | null>(null);
@@ -58,6 +62,14 @@ export default function Waitlist() {
     d.classList.remove("leaving");
     d.showModal();
     input.current!.focus();
+    if (TURNSTILE_SITE_KEY && !challenge.current) {
+      challenge.current = mountTurnstile(captchaBox.current!, TURNSTILE_SITE_KEY, "waitlist");
+    }
+  }
+
+  function unmountChallenge() {
+    challenge.current?.remove();
+    challenge.current = null;
   }
 
   function close() {
@@ -139,19 +151,31 @@ export default function Waitlist() {
     busyRef.current = true;
     setBusy(true);
     setError("");
+    const fail = (msg: string) => {
+      busyRef.current = false;
+      setBusy(false);
+      setError(msg);
+    };
+
+    let token = "";
+    if (challenge.current) {
+      try {
+        token = await challenge.current.token();
+      } catch {
+        return fail("Couldn’t verify you’re human. Please try again.");
+      }
+    }
     try {
       const res = await fetch("/api/waitlist", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, token }),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(data.error || "Couldn’t save right now. Please try again in a moment.");
     } catch (err) {
-      busyRef.current = false;
-      setBusy(false);
-      setError(err instanceof TypeError ? "Couldn’t reach the server. Check your connection and try again." : (err as Error).message);
-      return;
+      challenge.current?.consume();
+      return fail(err instanceof TypeError ? "Couldn’t reach the server. Check your connection and try again." : (err as Error).message);
     }
     try { localStorage.setItem(KEY, email); } catch {}
     input.current!.blur();
@@ -170,6 +194,7 @@ export default function Waitlist() {
         aria-labelledby="wl-title"
         onCancel={(e) => { e.preventDefault(); if (!busyRef.current) close(); }}
         onClick={(e) => { if (e.target === dlg.current && !busyRef.current) close(); }}
+        onClose={unmountChallenge}
       >
         <button className="close" type="button" onClick={close} aria-label="Close">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round">
@@ -185,6 +210,7 @@ export default function Waitlist() {
           <label htmlFor="wl-email">Gmail address</label>
           <input ref={input} id="wl-email" type="email" inputMode="email" autoComplete="email" placeholder="name@gmail.com" required />
           <p className="err" role="alert">{error}</p>
+          <div className="captcha" ref={captchaBox} />
           <button className="btn submit" type="submit" disabled={busy}>{busy ? "Joining…" : "Join waitlist"}</button>
         </form>
       </dialog>

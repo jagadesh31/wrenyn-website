@@ -63,6 +63,7 @@ input:focus,input:focus-visible{outline:none;border-color:var(--bg);background:v
 input:-webkit-autofill{-webkit-box-shadow:0 0 0 40px var(--bg) inset;-webkit-text-fill-color:var(--primary)}
 .err{min-height:20px;margin:8px 0 0;font-size:13px;color:var(--primary);font-weight:600}
 dialog .err{margin:8px 0 6px}
+.captcha{min-height:65px;margin:0 0 12px}
 .btn.submit{width:100%;background:var(--primary);color:var(--accent);padding:15px 22px;font-size:15px}
 .btn.submit:hover,.btn.submit:focus-visible{box-shadow:0 8px 24px rgba(32,35,34,.35)}
 
