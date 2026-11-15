@@ -7,7 +7,9 @@
     "build": "next build",
     "start": "next start",
     "typecheck": "tsc --noEmit",
-    "test": "node --experimental-strip-types --test tests/*.test.mjs"
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "test:browser": "playwright test site.spec.ts",
+    "test:contact-inbox": "playwright test contact-inbox.spec.ts"
   },
   "dependencies": {
     "next": "^16.4.3",
@@ -17,6 +19,7 @@
     "server-only": "^0.0.1"
   },
   "devDependencies": {
+    "@playwright/test": "^1.65.1",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
