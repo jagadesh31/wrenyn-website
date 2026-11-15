@@ -23,7 +23,7 @@ The contact form accepts any valid email address, an optional name, a topic, and
 
 ### Inbox ownership
 
-Before launch, designate a primary inbox owner and a backup. The primary owner checks `/admin` each business day and replies from the team mailbox. During absences, the backup covers the inbox. Use the mailbox’s sent history to see which requests have already received a reply.
+The primary owner checks `/admin` each business day and replies from the team mailbox. During absences, the backup covers the inbox. Use the mailbox’s sent history to see which requests have already received a reply. Keep the owner contact details in the internal handoff.
 
 ## Checks
 
@@ -47,14 +47,12 @@ npm run test:browser
 
 ### Contact inbox check
 
-Use a staging deployment or a local build with an isolated PostgreSQL database, staging admin credentials, and [Cloudflare Turnstile test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/). Configure the public key before building, and configure the secret key on the server.
+Use a local production build with an isolated PostgreSQL database, test admin credentials, and [Cloudflare Turnstile test keys](https://developers.cloudflare.com/turnstile/troubleshooting/testing/). Configure the public key before building, and configure the secret key on the server.
 
-Set `WRENYN_TEST_URL` to the staging origin, or leave it unset to start the local production build. Supply `WRENYN_TEST_ADMIN_SECRET` and `WRENYN_TEST_ADMIN_PASSWORD` through your environment. Then run `npm run test:contact-inbox`. It saves a uniquely marked test request, checks that it appears in the searchable admin inbox, and verifies the reply address and subject.
+Supply `WRENYN_TEST_ADMIN_SECRET` and `WRENYN_TEST_ADMIN_PASSWORD` through your environment. Then run `npm run test:contact-inbox`. It starts the local production build, saves a uniquely marked test request, checks that it appears in the searchable admin inbox, and verifies the reply address and subject.
 
 ### Release checks
 
 The **Verify website** GitHub Actions workflow runs the unit tests, production build with TypeScript checks, and Chromium browser checks on pushes and pull requests.
-
-For the staging release check, configure a GitHub environment named `staging` with the `WRENYN_TEST_URL` variable and the two `WRENYN_TEST_ADMIN_*` secrets above. Use a dedicated staging deployment and database. Once the candidate is on staging, run **Verify staging contact inbox** from the default branch in GitHub Actions. Check that it passes before promoting the deployment.
 
 `/products` and `/about` intentionally have no page. The Products menu links to individual product routes.
