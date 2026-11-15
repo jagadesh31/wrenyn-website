@@ -1,23 +1,10 @@
 import Link from "next/link";
 import BirdMark from "./BirdMark";
-
 export default function SiteFooter() {
-  return (
-    <footer className="site-footer">
-      <div className="site-footer-brand">
-        <Link className="brand brand-sm" href="/" aria-label="Wrenyn">
-          <BirdMark />
-          <span>wrenyn</span>
-        </Link>
-        <p>Developer tools that just work.</p>
-      </div>
-      <nav className="site-footer-links" aria-label="Footer">
-        <Link href="/products">Products</Link>
-        <Link href="/products/kexoz">Kexoz</Link>
-        <Link href="/about">About</Link>
-        <a href="https://kexoz.dev" target="_blank" rel="noreferrer">kexoz.dev</a>
-      </nav>
-      <p className="site-footer-copy">© {new Date().getFullYear()} Wrenyn</p>
-    </footer>
-  );
+  return <footer className="company-footer">
+    <div><Link className="brand" href="/" aria-label="Wrenyn home"><BirdMark /><span>wrenyn</span></Link><p>Tools for the work<br />you want to be doing.</p></div>
+    <nav aria-label="Products"><h2>Products</h2><Link href="/products/kexoz">Kexoz <span>↗</span></Link><Link href="/products/ochiro">Ochiro <small>Coming soon</small></Link></nav>
+    <nav aria-label="Company"><h2>Wrenyn</h2><Link href="/company">Our approach</Link><Link href="/contact">Contact</Link><Link href="/privacy">Your information</Link></nav>
+    <div className="company-footer-bottom"><span>© {new Date().getFullYear()} Wrenyn</span><span>Built with purpose. Open to ideas.</span></div>
+  </footer>;
 }

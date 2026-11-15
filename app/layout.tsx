@@ -1,11 +1,13 @@
 import type { Metadata, Viewport } from "next";
-import { IBM_Plex_Mono, Inter, Space_Grotesk } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import "./site.css";
+import "./company.css";
+import "./brand.css";
+import { ContactProvider } from "./components/Contact";
 
-const heading = Space_Grotesk({ subsets: ["latin"], weight: ["500", "600", "700"], variable: "--font-heading" });
-const body = Inter({ subsets: ["latin"], variable: "--font-body" });
-const mono = IBM_Plex_Mono({ subsets: ["latin"], weight: ["400", "500"], variable: "--font-mono" });
+const heading = localFont({ src: "./fonts/space-grotesk-latin-variable.woff2", weight: "300 700", display: "swap", variable: "--font-heading" });
+const mono = localFont({ src: [{ path: "./fonts/ibm-plex-mono-400.woff2", weight: "400" }, { path: "./fonts/ibm-plex-mono-500.woff2", weight: "500" }], display: "swap", variable: "--font-mono" });
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://wrenyn.com"),
@@ -13,16 +15,16 @@ export const metadata: Metadata = {
     default: "Wrenyn – Developer tools that just work",
     template: "%s · Wrenyn",
   },
-  description: "Wrenyn builds focused developer tools. Kexoz lives on kexoz.dev — share local builds, collect review feedback, ship the next version.",
+  description: "Wrenyn builds focused tools for developers and the teams around them. Explore Kexoz, share an idea, or tell us what your workflow needs.",
   icons: { icon: "/wrenyn-logo.png", apple: "/wrenyn-logo.png" },
   openGraph: {
     siteName: "Wrenyn",
     type: "website",
-    images: [{ url: "/brand/kexoz-og.jpg", width: 1200, height: 630, alt: "Kexoz by Wrenyn" }],
+    images: [{ url: "/wrenyn-logo.png", alt: "Wrenyn" }],
   },
   twitter: {
-    card: "summary_large_image",
-    images: ["/brand/kexoz-og.jpg"],
+    card: "summary",
+    images: ["/wrenyn-logo.png"],
   },
 };
 
@@ -33,8 +35,8 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${heading.variable} ${body.variable} ${mono.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${heading.variable} ${mono.variable}`}>
+      <body><ContactProvider>{children}</ContactProvider></body>
     </html>
   );
 }

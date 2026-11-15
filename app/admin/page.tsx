@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { adminConfigured, isAdmin } from "@/lib/auth";
-import { getSignups, getViewers, type Signup } from "@/lib/db";
+import { getSignups, getViewers, getContacts, type Signup, type ContactRequest } from "@/lib/db";
+import ContactInbox from "./ContactInbox";
 import { logout } from "./actions";
 import LoginForm from "./LoginForm";
 import SignupTable from "./SignupTable";
@@ -38,9 +39,10 @@ export default async function AdminPage() {
 
   let viewers = 0;
   let rows: Signup[] = [];
+  let contacts: ContactRequest[] = [];
   let loadError = "";
   try {
-    [viewers, rows] = await Promise.all([getViewers(), getSignups()]);
+    [viewers, rows, contacts] = await Promise.all([getViewers(), getSignups(), getContacts()]);
   } catch (e) {
     console.error("admin data load failed", e);
     loadError = e instanceof Error ? e.message : "Unknown database error";
@@ -67,6 +69,7 @@ export default async function AdminPage() {
         <div className="stat"><span>Signups, last 7 days</span><b>{lastWeek.toLocaleString("en-US")}</b></div>
       </div>
 
+      <ContactInbox rows={contacts} />
       <SignupTable rows={rows} />
     </div>
   );

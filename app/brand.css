@@ -1,0 +1,27 @@
+/* Shared with Kexoz: one UI family, measured spacing, restrained accents. */
+:root { --font-body: var(--font-heading); }
+body, button, input, select, textarea { font-family: var(--font-body), system-ui, sans-serif; }
+h1, h2, h3, h4 { font-family: var(--font-body), sans-serif; font-weight: 500; text-wrap: balance; }
+p { text-wrap: pretty; }
+.co-kicker, .company-hero .co-kicker, .company-hero-caption {
+  font-family: var(--font-body), sans-serif; font-size: 11px; font-weight: 500; letter-spacing: .08em;
+}
+.company-hero-copy > p:not(.co-kicker), .company-page-intro > p:not(.co-kicker) { line-height: 1.75; color: #b2bdb0; }
+.company-section h2 { letter-spacing: -.045em; }
+.company-principles article p { font-size: 15px; }
+.company-footer nav a { font-size: 14px; }
+.company-conversation {
+  flex-direction: column; text-align: center; gap: 28px;
+  border: 1px solid #303a30; border-radius: 20px;
+  padding: clamp(48px, 6vw, 80px) 24px; margin-block: 56px 80px;
+  background: radial-gradient(ellipse at 50% 100%, #b6f36b0c, transparent 70%);
+}
+.company-conversation h2 { max-width: 22ch; margin-inline: auto; }
+.company-conversation p:not(.co-kicker) { max-width: 48ch; margin-inline: auto; }
+.company-conversation .co-kicker { color: #82c9a9; }
+.company-actions .btn, .company-conversation .btn { border-radius: 9px; }
+.btn:hover { box-shadow: none; }
+@media (max-width: 620px) {
+  .company-hero h1, .company-page-intro h1 { font-size: clamp(38px, 10vw, 52px); }
+  .company-conversation { margin-block: 24px 48px; }
+}

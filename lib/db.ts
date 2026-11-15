@@ -2,6 +2,7 @@ import "server-only";
 import postgres from "postgres";
 
 export type Signup = { id: string; email: string; created_at: string };
+export type ContactRequest = { id: string; email: string; name: string; topic: string; message: string; created_at: string };
 
 // Cached on globalThis so dev hot reloads reuse one pool instead of opening new connections.
 const cache = globalThis as unknown as { sql?: postgres.Sql; schema?: Promise<void>; downUntil?: number };
@@ -11,6 +12,15 @@ const BREAKER_MS = 5000;
 const CONNECTION_ERROR = /^(CONNECT_TIMEOUT|CONNECTION_|ECONN|ENOTFOUND|ETIMEDOUT|EAI_AGAIN|EHOSTUNREACH|ENETUNREACH)/;
 
 const SCHEMA = [
+  `create table if not exists contact_requests (
+     id bigint generated always as identity primary key,
+     email text not null,
+     name text not null default '',
+     topic text not null,
+     message text not null,
+     created_at timestamptz not null default now()
+   )`,
+  `alter table contact_requests enable row level security`,
   `create table if not exists waitlist (
      id bigint generated always as identity primary key,
      email text not null unique,
@@ -84,6 +94,17 @@ async function query<T>(run: (sql: postgres.Sql) => Promise<T>): Promise<T> {
 
 export async function addSignup(email: string) {
   await query((sql) => sql`insert into waitlist (email) values (${email}) on conflict (email) do nothing`);
+}
+
+export async function addContact(value: { email: string; name: string; topic: string; message: string }) {
+  await query(sql => sql`insert into contact_requests (email, name, topic, message) values (${value.email}, ${value.name}, ${value.topic}, ${value.message})`);
+}
+
+export async function getContacts(): Promise<ContactRequest[]> {
+  return query(async sql => {
+    const rows = await sql<{ id: string; email: string; name: string; topic: string; message: string; created_at: Date }[]>`select id, email, name, topic, message, created_at from contact_requests order by created_at desc limit 500`;
+    return rows.map(row => ({ ...row, id: String(row.id), created_at: row.created_at.toISOString() }));
+  });
 }
 
 // Fixed-window counter: the first hit opens a window of `windowSeconds`, later hits in it add up.
