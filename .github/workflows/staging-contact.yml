@@ -1,0 +1,33 @@
+name: Verify staging contact inbox
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: staging-contact-inbox
+
+jobs:
+  contact-inbox:
+    if: github.ref_name == github.event.repository.default_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Submit a staging contact request and verify the inbox
+        env:
+          WRENYN_TEST_URL: ${{ vars.WRENYN_TEST_URL }}
+          WRENYN_TEST_ADMIN_SECRET: ${{ secrets.WRENYN_TEST_ADMIN_SECRET }}
+          WRENYN_TEST_ADMIN_PASSWORD: ${{ secrets.WRENYN_TEST_ADMIN_PASSWORD }}
+        run: |
+          node -e 'const url = new URL(process.env.WRENYN_TEST_URL); if (url.protocol !== "https:" || url.username || url.password || url.pathname !== "/" || url.search || url.hash) throw new Error("WRENYN_TEST_URL must be the HTTPS origin of the staging site.")'
+          npm run test:contact-inbox

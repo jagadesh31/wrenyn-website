@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import CompanyShell from "../../components/CompanyShell";
 import KexozLogo from "../../components/KexozLogo";
+import KexozPreview from "../../components/KexozPreview";
+
+const quickstart = "https://kexoz.dev/docs#quickstart";
 
 export const metadata: Metadata = {
   title: "Kexoz",
@@ -29,8 +32,7 @@ export default function KexozProductPage() {
           <h1 id="kx-intro-title">Build locally.<br /><span>Bring people closer.</span></h1>
           <p>Give your local app a public link. Let teammates try the real thing, pin feedback on the page, and review the next fix with you.</p>
           <div className="kx-intro-actions">
-            <a className="kx-intro-link" href="https://kexoz.dev">Explore Kexoz <span aria-hidden="true">&#8599;</span></a>
-            <a className="kx-intro-docs" href="https://kexoz.dev/docs">Read the docs <span aria-hidden="true">&#8594;</span></a>
+            <a className="kx-intro-link" href={quickstart}>Start with Kexoz <span aria-hidden="true">&#8599;</span></a>
           </div>
         </div>
       </section>
@@ -39,27 +41,10 @@ export default function KexozProductPage() {
 
       <section className="kx-workflow" aria-labelledby="workflow-title">
         <div className="kx-workflow-heading">
-          <p className="co-kicker">HOW IT WORKS</p>
-          <h2 id="workflow-title">From localhost to feedback.</h2>
-          <p>Share your work while it’s still in progress, and keep the conversation in context.</p>
+          <h2 id="workflow-title">See where feedback belongs.</h2>
+          <p>Open a note from the feedback list or select its pin on the page to see what the reviewer flagged.</p>
         </div>
-        <div className="kx-workflow-grid">
-          <article>
-            <span className="kx-workflow-number">01 <span>Share</span></span>
-            <h3>Give your build a link.</h3>
-            <p>Share the app running on your machine through a secure preview link.</p>
-          </article>
-          <article>
-            <span className="kx-workflow-number">02 <span>Review</span></span>
-            <h3>Feedback in the right place.</h3>
-            <p>Reviewers can pin notes directly to the page, so you can see exactly what needs attention.</p>
-          </article>
-          <article>
-            <span className="kx-workflow-number">03 <span>Refine</span></span>
-            <h3>Keep moving forward.</h3>
-            <p>Reply, make changes, and track feedback as you bring the work together.</p>
-          </article>
-        </div>
+        <KexozPreview />
       </section>
 
       <section className="company-section kx-scenarios"><div><p className="co-kicker">BUILT FOR THE IN-BETWEEN</p><h2>Useful before<br />the next deployment.</h2></div><div><a href="https://kexoz.dev/use-cases#reviews"><strong>Review a working interface</strong><span>Design feedback, without guessing from screenshots.</span><b aria-hidden="true">↗</b></a><a href="https://kexoz.dev/use-cases#webhooks"><strong>Test an integration locally</strong><span>A public endpoint for your local API.</span><b aria-hidden="true">↗</b></a><a href="https://kexoz.dev/use-cases#clients"><strong>Walk a client through the build</strong><span>Share progress while the work is taking shape.</span><b aria-hidden="true">↗</b></a></div></section>
@@ -68,8 +53,7 @@ export default function KexozProductPage() {
         <span className="kx-closing-eyebrow">Less setup. More useful feedback.</span>
         <h2 id="closing-title">Let someone try what<br />you’re building.</h2>
         <p>Start with the app already running on your machine.</p>
-        <a className="btn kx-closing-button" href="https://kexoz.dev">Visit Kexoz <span aria-hidden="true">&#8599;</span></a>
-        <span className="kx-closing-note">Explore Kexoz and start sharing</span>
+        <a className="btn kx-closing-button" href={quickstart}>Open the quickstart <span aria-hidden="true">&#8599;</span></a>
       </section>
     </CompanyShell>
   );

@@ -171,7 +171,6 @@
 .product-menu > summary::-webkit-details-marker { display: none; }
 .product-menu > .product-menu-panel { display: none; }
 .product-menu[open] > .product-menu-panel { display: block; }
-@media(hover:hover) { .product-menu:hover > .product-menu-panel { display: block; } }
 .product-menu[open] .product-menu-chevron { transform: rotate(180deg); }
 .product-menu-panel { z-index: 101; }
-@media(hover:hover) { .product-menu:hover::details-content { content-visibility:visible; } }
+.product-menu-panel::before { content: ""; position: absolute; height: 10px; left: 0; right: 0; bottom: 100%; }

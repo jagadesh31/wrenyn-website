@@ -11,8 +11,9 @@ export default function CompanyShell({
 }) {
   return (
     <div className={`co-shell co-glow-${glow}`}>
+      <a className="company-skip" href="#main-content">Skip to content</a>
       <SiteHeader solid />
-      <main className="co-main">{children}</main>
+      <main id="main-content" className="co-main" tabIndex={-1}>{children}</main>
       <SiteFooter />
     </div>
   );
