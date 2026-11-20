@@ -25,3 +25,18 @@ p { text-wrap: pretty; }
   .company-hero h1, .company-page-intro h1 { font-size: clamp(38px, 10vw, 52px); }
   .company-conversation { margin-block: 24px 48px; }
 }
+
+/* Home: header + hero fill the first viewport exactly. */
+:root { --site-header-h: 76px; }
+@media (max-width: 760px) { :root { --site-header-h: 68px; } }
+@media (max-width: 420px) { :root { --site-header-h: 64px; } }
+
+.wrenyn-home .company-hero {
+  box-sizing: border-box;
+  height: calc(100svh - var(--site-header-h));
+  min-height: calc(100svh - var(--site-header-h));
+  max-height: calc(100svh - var(--site-header-h));
+  padding-top: clamp(36px, 5vw, 64px);
+  padding-bottom: 28px;
+  gap: clamp(28px, 5vw, 56px);
+}
